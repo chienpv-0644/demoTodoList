@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.form-search{
+  float: right;
+}
+
+.mg-form{
+  margin: 20px;
+}
+
+.mg-app{
+  margin: 10px;
+}
