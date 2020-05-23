@@ -3,42 +3,33 @@ import logo from './logo.svg';
 import './App.css';
 import List from './components/list'
 import TodoForm from './components/todo_form';
-
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class App extends React.Component {
   constructor(){
     super();
     this.state = {
       todoName: "",
-      todo_lists: [
-        {
-          id: 1,
-          name: "Hoc HTML"
-        },
-        {
-          id: 2,
-          name: "Hoc CSS"
-        },
-        {
-          id: 3,
-          name: "Hoc JS"
-        },
-        {
-          id: 4,
-          name: "Hoc ReactJS"
-        }
-      ]
+      todo_lists: [],
+      loader: true   
     }
   }
 
   handlerSubmit(e, inputRef){
     e.preventDefault();
     let todo = {
-      id: 10,
       name: inputRef.current.value
     }
-    this.setState({
-      todo_lists: [...this.state.todo_lists, todo]
+    const notify = () => toast.success("Ban da tao thanh cong!");
+    axios.post("https://5ec912c49ccbaf0016aa8b5c.mockapi.io/todolists", todo)
+    .then((res)=>{
+      this.setState({
+        todo_lists: [...this.state.todo_lists, res.data]
+      })
+      notify()
     })
+    
   }
 
   handlerDelete(e, index){
@@ -56,11 +47,29 @@ class App extends React.Component {
     })
   }
 
+  componentDidMount(){
+    this.setState({
+      loader: true
+    })
+    axios.get("https://5ec912c49ccbaf0016aa8b5c.mockapi.io/todolists")
+    .then((res)=>{
+      console.log(res.data);
+      this.setState({
+        todo_lists: res.data,
+        loader: false
+      })
+    }).catch((e)=>{
+      alert(e)
+    })
+  }
+
   render(){
     return (
       <div className="mg-app">
+        <ToastContainer/>
         <TodoForm todoName={this.state.todoName} handlerSubmit={this.handlerSubmit.bind(this)}/>
         <List handlerEdit={this.handlerEdit.bind(this)} handlerDelete={this.handlerDelete.bind(this)} todos={this.state.todo_lists}/>
+        {this.state.loader && <div class="loader"></div>}
       </div>
     );
   }
