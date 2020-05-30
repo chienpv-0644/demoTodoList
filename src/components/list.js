@@ -1,10 +1,11 @@
 import React from 'react';
 import Item from './item';
+import MyContext from '../my_contex';
 
 class List extends React.Component {
   render(){
-    let dataShow = this.props.todos.map((value, index)=>{
-        return <Item handlerEdit={this.props.handlerEdit} handlerDelete={this.props.handlerDelete} key={index} todoName={value.name} index={index}/>
+    let dataShow = this.context.todos.map((value, index)=>{
+        return <Item handlerEdit={this.props.handlerEdit} key={index} todoName={value.name} index={index}/>
     })
     return (
       <div>
@@ -25,4 +26,6 @@ class List extends React.Component {
   }
 }
 
+
+List.contextType = MyContext;
 export default List;
